@@ -473,9 +473,10 @@ def main():
                                             [1, 2, 0, -2, -1],
                                             [1, 2, 0, -2, -1]]))
     image_in_jgp = "lena.jpg"
+    image_in_tiff = "lena_std.tiff"
     image_in_bmp = "lena512.bmp"
 
-    #filename = image_in_bmp
+    #filename = image_in_tif
     filename = input("Write the name of the image to read: ")
     print("Laboratorio 2 - Convolución 2D")
 
