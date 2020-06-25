@@ -406,7 +406,6 @@ def plot_fft2d_image(fft, label):
     """
     plt.figure("Transformada de Fourier en 2D - "+label)
     plt.imshow(np.log(np.abs(fft)))
-    plt.imshow(np.log(np.abs(fft)))
     plt.suptitle("Transformada de Fourier en 2D.", fontsize=12)
     plt.title(label, fontsize=10)
     plt.xlabel("Ancho (px)")
