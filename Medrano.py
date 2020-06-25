@@ -74,7 +74,8 @@ def exists_image_file(filename):
 
 
 def read_image(filename):
-    """ Read an image using matplotlib. (if the image is in rgb, convert it to grayscale)
+    """ Read an image using matplotlib. (if the image is in rgb,
+    convert it to grayscale)
     
     Returns an image numpy matrix.
     
@@ -146,6 +147,7 @@ def convert_image_to_gray_scale(image):
     matrix: numpy matrix
         The grayscale image matrix.
     """
+    print("-- Imagen convertida a escala de grises.\n")
     return np.dot(image[..., :3], [0.2989, 0.5870, 0.1140])
 
 def get_image_height(image):
@@ -183,7 +185,7 @@ def get_image_width(image):
     return image.shape[1]
 
 def apply_filter(image, kernel):
-    """ Check if the image file exists.
+    """ Apply filter to an image.
     
     Returns a matrix with the filter applied on the image.
     
@@ -202,14 +204,14 @@ def apply_filter(image, kernel):
     """
     border_size = get_border_size(kernel)
     bordered_image = add_border_to_image(image, border_size)
-    convolution_image = create_image(get_image_height(image), get_image_width(image))
+    result_image = create_image(get_image_height(image), get_image_width(image))
     horizontal_range = range(border_size, get_image_height(bordered_image) - border_size)
     vertical_range = range(border_size, get_image_width(bordered_image) - border_size)
     
     for i in horizontal_range:
         for j in vertical_range:
-            convolution_image[i - border_size, j - border_size] = convolution_2(i, j, bordered_image, kernel, border_size)
-    return convolution_image
+            result_image[i - border_size, j - border_size] = convolution_2(i, j, bordered_image, kernel, border_size)
+    return result_image
 
 def convolution(i, j, image, kernel, border_size):
     """ Perform the convolution between a kernel and an image.
@@ -404,8 +406,11 @@ def plot_fft2d_image(fft, label):
     """
     plt.figure("Transformada de Fourier en 2D - "+label)
     plt.imshow(np.log(np.abs(fft)))
+    plt.imshow(np.log(np.abs(fft)))
     plt.suptitle("Transformada de Fourier en 2D.", fontsize=12)
     plt.title(label, fontsize=10)
+    plt.xlabel("Ancho (px)")
+    plt.ylabel("Alto (px)")
     plt.colorbar()
 
 
@@ -473,11 +478,17 @@ def main():
                                             [1, 2, 0, -2, -1],
                                             [1, 2, 0, -2, -1]]))
     image_in_jgp = "lena.jpg"
+    image_in_tiff = "lena_std.tiff"
     image_in_bmp = "lena512.bmp"
 
-    #filename = image_in_bmp
-    filename = input("Write the name of the image to read: ")
-    print("Laboratorio 2 - Convolución 2D")
+    #filename = image_in_tif
+    print("--- Laboratorio 2 - Convolución 2D (Desarrollado por: Cristóbal Medrano A.) ---")
+    print("Adjunto a este programa, se encuentran 3 tipos de imágenes:")
+    print("'lena.jpg'")
+    print("'lena_std.tiff'")
+    print("'lena512.bmp'")
+    filename = input("Escriba el nombre del archivo de imagen a procesar: ")
+    print()
 
     #The input files are verified to be correct
     if exists_image_file(filename) and is_valid_kernel(laplacian_filter) and is_valid_kernel(gaussian_filter) and is_valid_kernel(edge_detection_filter):
@@ -486,13 +497,15 @@ def main():
         original_image = read_image(filename)
         if is_valid_image_matrix(original_image):
 
+            #Function run time starts
             current_time = time.time()
             show_start_time_message('filtro laplaciano')
 
             #Filter is applied to the image
             laplacian_image = apply_filter(original_image, laplacian_filter)
             show_end_time_message(current_time, 'filtro laplaciano')
-
+            
+            #Function run time starts
             current_time = time.time()
             show_start_time_message('filtro gaussiano')
 
@@ -500,6 +513,7 @@ def main():
             smoothed_image = apply_filter(original_image, gaussian_filter)
             show_end_time_message(current_time, 'filtro gaussiano')
             
+            #Function run time starts
             current_time = time.time()
             show_start_time_message('filtro detector de bordes')
 
@@ -509,36 +523,26 @@ def main():
 
             #Image is normalized
             normalized_laplacian_image = normalize_image(laplacian_image)
-            #Image is normalized
             normalized_smoothed_image = normalize_image(smoothed_image)
-            #Image is normalized
             normalized_borders_image = normalize_image(borders_image)
 
             print("- Guardando los resultados obtenidos.")
             #The obtained image is saved
             save_image("filtro_laplaciano_"+filename, normalized_laplacian_image)
-            #The obtained image is saved
             save_image("filtro_gaussiano_"+filename, normalized_smoothed_image)
-            #The obtained image is saved
             save_image("filtro_detector_bordes_"+filename, normalized_borders_image)
             
             #Fourier transform is calculated in 2 dimensions
             fft_original_image = np.fft.fft2(original_image)
-            #Fourier transform is calculated in 2 dimensions
             fft_laplacian_image = np.fft.fft2(normalized_laplacian_image)
-            #Fourier transform is calculated in 2 dimensions
             fft_smoothed_image = np.fft.fft2(normalized_smoothed_image)
-            #Fourier transform is calculated in 2 dimensions
             fft_borders_image = np.fft.fft2(normalized_borders_image)
 
-            print("\n- Generando Imagenes resultantes...")
+            print("\n- Generando gráficos de las imagenes resultantes...")
             #The resulting image is displayed
             plot_image(original_image, f"Imagen Original {filename}")
-            #The resulting image is displayed
             plot_image(normalized_laplacian_image, f"Filtro 'Laplaciano' aplicado en {filename}")
-            #The resulting image is displayed
             plot_image(normalized_smoothed_image, f"Filtro 'Suavizado Gaussiano' aplicado en {filename}")
-            #The resulting image is displayed
             plot_image(normalized_borders_image, f"Filtro 'Detector de Bordes' aplicado en {filename}")
             
             print("\n- Generando gráficos de la transformada de fourier...")
@@ -566,3 +570,8 @@ main()
 #https://stackoverflow.com/questions/38332642/plot-the-2d-fft-of-an-image
 #https://stackoverflow.com/questions/21362843/interpret-numpy-fft-fft2-output
 #https://numpy.org/doc/stable/reference/generated/numpy.fft.fft2.html
+#http:// ndevilla.free.fr/lena/
+#https://www.famaf.unc.edu.ar/~pperez1/manuales/cim/cap2.html
+#http://alojamientos.us.es/gtocoma/pid/tema3-2.pdf
+#https://www.um.es/geograf/sigmur/teledet/tema06.pdf
+#https://www.lpi.tel.uva.es/~nacho/docencia/ing_ond_1/trabajos_03_04/sonificacion/cabroa_archivos/pasoalto.html

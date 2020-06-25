@@ -50,7 +50,7 @@ class Kernel:
 
 # FUNCTIONS
 def apply_filter(image, kernel):
-    """ Check if the image file exists.
+    """ Apply filter to an image.
     
     Returns a matrix with the filter applied on the image.
     
@@ -69,15 +69,15 @@ def apply_filter(image, kernel):
     """
     border_size = get_border_size(kernel)
     bordered_image = add_border_to_image(image, border_size)
-    convolution_image = create_image(get_image_height(image), get_image_width(image))
+    result_image = create_image(get_image_height(image), get_image_width(image))
     horizontal_range = range(border_size, get_image_height(bordered_image) - border_size)
     vertical_range = range(border_size, get_image_width(bordered_image) - border_size)
 
     for i in horizontal_range:
         for j in vertical_range:
-            convolution_image[i - border_size, j - border_size] = convolution_2(
+            result_image[i - border_size, j - border_size] = convolution_2(
                 i, j, bordered_image, kernel, border_size)
-    return convolution_image
+    return result_image
 
 def get_border_size(kernel):
     """ Get the size of the border to apply to the image.
