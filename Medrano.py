@@ -575,3 +575,5 @@ main()
 #http://alojamientos.us.es/gtocoma/pid/tema3-2.pdf
 #https://www.um.es/geograf/sigmur/teledet/tema06.pdf
 #https://www.lpi.tel.uva.es/~nacho/docencia/ing_ond_1/trabajos_03_04/sonificacion/cabroa_archivos/pasoalto.html
+#https://www.math.utah.edu/~gustafso/s2014/3150/pdeNotes/fourierTransform-in-image-processing-john-brayer-univ-new-mexico.html#:~:text=The%20Fourier%20Transform%20(%20in%20this,image%20(orthonormal)%20basis%20functions.
+#https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_transforms/py_fourier_transform/py_fourier_transform.html
